@@ -1,6 +1,7 @@
-package com.devxschool.apiframework.cucumber.steps;
+package com.devxschool.apiframework.cucumber.steps.rebrandly;
 
 import com.devxschool.apiframework.api.pojos.RebrandlyLink;
+import com.devxschool.apiframework.utilities.ObjectConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
@@ -49,20 +50,14 @@ public class RebrandlySteps {
 
     @Then("^only 1 link is returned$")
     public void only_link_is_returned() throws Throwable {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        RebrandlyLink[] responseArray = objectMapper.readValue(response.body().asString(), RebrandlyLink[].class);
-
-        List<RebrandlyLink> linksList = Arrays.asList(responseArray);
+        List<RebrandlyLink> linksList = ObjectConverter.convertJsonArrayToListOfObjects(response.body().asString(), RebrandlyLink[].class);
 
         MatcherAssert.assertThat(linksList.size(), Matchers.is(1));
     }
 
     @Then("^verify that (\\d+) links has been returned with the following domainId \"([^\"]*)\"$")
     public void the_domainId_is(int numberOfLinks, String domainId) throws Throwable {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        List<RebrandlyLink> linksList = Arrays.asList(objectMapper.readValue(response.body().asString(), RebrandlyLink[].class));
+        List<RebrandlyLink> linksList = ObjectConverter.convertJsonArrayToListOfObjects(response.body().asString(), RebrandlyLink[].class);
 
         MatcherAssert.assertThat(linksList.size(), Matchers.is(numberOfLinks));
         for (RebrandlyLink rebrandlyLinkResponse : linksList) {
@@ -85,9 +80,7 @@ public class RebrandlySteps {
 
     @Then("^the following link has been returned$")
     public void the_following_link_has_been_created(List<Map<String, String>> linkResponse) throws Throwable {
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        RebrandlyLink rebrandlyLinkResponse = objectMapper.readValue(response.body().asString(), RebrandlyLink.class);
+        RebrandlyLink rebrandlyLinkResponse = ObjectConverter.convertJsonObjectToJavaObject(response.body().asString(), RebrandlyLink.class);
 
         MatcherAssert.assertThat(rebrandlyLinkResponse.getDestination(), Matchers.is(linkResponse.get(0).get("destination")));
     }
