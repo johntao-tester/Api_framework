@@ -7,14 +7,14 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         features = {
-                "src/test/resources/features/rebrandly.feature"
+                "src/test/resources/features/gorestusers.feature"
         },
         glue = {
-                "com.devxschool.apiframework.cucumber.steps.rebrandly"
+                "com.devxschool.apiframework.cucumber.steps.gorest"
         },
         tags = {
-                "@createLink"
+                "@createUser"
         },
         dryRun = false
 )
-public class RebrandlyTest {}
+public class GorestTest {}
