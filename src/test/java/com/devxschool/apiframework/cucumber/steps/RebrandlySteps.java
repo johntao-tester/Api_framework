@@ -1,6 +1,7 @@
-package com.devxschool.apiframework.cucumber.steps.rebrandly;
+package com.devxschool.apiframework.cucumber.steps;
 
 import com.devxschool.apiframework.api.pojos.RebrandlyLink;
+import com.devxschool.apiframework.cucumber.steps.common.CommonData;
 import com.devxschool.apiframework.utilities.ObjectConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cucumber.api.java.After;
@@ -19,8 +20,12 @@ import java.util.List;
 import java.util.Map;
 
 public class RebrandlySteps {
-    private Response response;
+    private CommonData commonData;
     private String linkId;
+
+    public RebrandlySteps(CommonData commonData) {
+        this.commonData = commonData;
+    }
 
     @Before
     public void setUp() {
@@ -31,33 +36,28 @@ public class RebrandlySteps {
     public void all_links_are_requested() throws Throwable {
         RequestSpecification requestSpec = setUpHeaders();
 
-        response = requestSpec.get("/v1/links");
-    }
-
-    @Then("^a status code (\\d+) is returned$")
-    public void a_status_code_is_returned(int statusCode) throws Throwable {
-        MatcherAssert.assertThat(response.getStatusCode(), Matchers.is(statusCode));
+        commonData.response = requestSpec.get("/v1/links");
     }
 
     @When("^all links are requested with the following query params$")
     public void all_links_are_requested_with_the_following_query_params(List<Map<String, String>> queryParams) throws Throwable {
         RequestSpecification requestSpec = setUpHeaders();
 
-        response = requestSpec
+        commonData.response = requestSpec
                 .queryParams(queryParams.get(0))
                 .get("/v1/links");
     }
 
     @Then("^only 1 link is returned$")
     public void only_link_is_returned() throws Throwable {
-        List<RebrandlyLink> linksList = ObjectConverter.convertJsonArrayToListOfObjects(response.body().asString(), RebrandlyLink[].class);
+        List<RebrandlyLink> linksList = ObjectConverter.convertJsonArrayToListOfObjects(commonData.response.body().asString(), RebrandlyLink[].class);
 
         MatcherAssert.assertThat(linksList.size(), Matchers.is(1));
     }
 
     @Then("^verify that (\\d+) links has been returned with the following domainId \"([^\"]*)\"$")
     public void the_domainId_is(int numberOfLinks, String domainId) throws Throwable {
-        List<RebrandlyLink> linksList = ObjectConverter.convertJsonArrayToListOfObjects(response.body().asString(), RebrandlyLink[].class);
+        List<RebrandlyLink> linksList = ObjectConverter.convertJsonArrayToListOfObjects(commonData.response.body().asString(), RebrandlyLink[].class);
 
         MatcherAssert.assertThat(linksList.size(), Matchers.is(numberOfLinks));
         for (RebrandlyLink rebrandlyLinkResponse : linksList) {
@@ -73,14 +73,15 @@ public class RebrandlySteps {
         RequestSpecification requestSpec = setUpHeaders();
         requestSpec.body(rebrandlyLink);
 
-        response = requestSpec.post("/v1/links");
+        commonData.response = requestSpec.post("/v1/links");
 
-        linkId = response.getBody().jsonPath().getString("id");
+        commonData.response.prettyPrint();
+        linkId = commonData.response.getBody().jsonPath().getString("id");
     }
 
     @Then("^the following link has been returned$")
     public void the_following_link_has_been_created(List<Map<String, String>> linkResponse) throws Throwable {
-        RebrandlyLink rebrandlyLinkResponse = ObjectConverter.convertJsonObjectToJavaObject(response.body().asString(), RebrandlyLink.class);
+        RebrandlyLink rebrandlyLinkResponse = ObjectConverter.convertJsonObjectToJavaObject(commonData.response.body().asString(), RebrandlyLink.class);
 
         MatcherAssert.assertThat(rebrandlyLinkResponse.getDestination(), Matchers.is(linkResponse.get(0).get("destination")));
     }
@@ -89,7 +90,7 @@ public class RebrandlySteps {
     public void requestLinkDetails() {
         RequestSpecification requestSpec = setUpHeaders();
 
-        response = requestSpec
+        commonData.response = requestSpec
                 .pathParam("linkId", linkId)
                 .get("/v1/links/{linkId}");
     }
@@ -103,7 +104,7 @@ public class RebrandlySteps {
 
         requestSpec.body(rebrandlyLinkBody);
 
-        response = requestSpec
+        commonData.response = requestSpec
                 .pathParam("linkId", id)
                 .post("/v1/links/{linkId}");
     }
@@ -112,7 +113,7 @@ public class RebrandlySteps {
     public void deleteLink() {
         RequestSpecification requestSpec = setUpHeaders();
 
-        response = requestSpec
+        commonData.response = requestSpec
                 .pathParam("linkId", linkId)
                 .delete("/v1/links/{linkId}");
     }
