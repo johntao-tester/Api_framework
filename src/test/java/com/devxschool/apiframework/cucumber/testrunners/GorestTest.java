@@ -10,10 +10,10 @@ import org.junit.runner.RunWith;
                 "src/test/resources/features/gorestusers.feature"
         },
         glue = {
-                "com.devxschool.apiframework.cucumber.steps.gorest"
+                "com.devxschool.apiframework.cucumber.steps",
         },
         tags = {
-                "@createUser"
+                "@getAllUsers"
         },
         dryRun = false
 )

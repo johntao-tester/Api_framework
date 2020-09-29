@@ -1,8 +1,9 @@
-package com.devxschool.apiframework.cucumber.steps.gorest;
+package com.devxschool.apiframework.cucumber.steps;
 
 import com.devxschool.apiframework.api.pojos.User;
 import com.devxschool.apiframework.api.pojos.UserResponseList;
 import com.devxschool.apiframework.api.pojos.UserResponseObject;
+import com.devxschool.apiframework.cucumber.steps.common.CommonData;
 import com.devxschool.apiframework.utilities.ObjectConverter;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Then;
@@ -19,7 +20,11 @@ import java.util.List;
 
 public class GorestSteps {
 
-    private Response response;
+    private CommonData commonData;
+
+    public GorestSteps(CommonData commonData) {
+        this.commonData = commonData;
+    }
 
     @Before
     public void setUp() {
@@ -32,17 +37,12 @@ public class GorestSteps {
 
         requestSpec.accept(ContentType.JSON);
 
-        response = requestSpec.get("/users");
-    }
-
-    @Then("^a status code (\\d+) is returned$")
-    public void a_status_code_is_returned(int statusCode) throws Throwable {
-        MatcherAssert.assertThat(response.getStatusCode(), Matchers.is(statusCode));
+        commonData.response = requestSpec.get("/users");
     }
 
     @Then("^(\\d+) users are returned$")
     public void users_are_returned(int amountOfUsers) throws Throwable {
-        UserResponseList userResponse = ObjectConverter.convertJsonObjectToJavaObject(response.body().asString(), UserResponseList.class);
+        UserResponseList userResponse = ObjectConverter.convertJsonObjectToJavaObject(commonData.response.body().asString(), UserResponseList.class);
 
         MatcherAssert.assertThat(userResponse.getUsers().size(), Matchers.is(amountOfUsers));
     }
@@ -56,12 +56,12 @@ public class GorestSteps {
         requestSpec.accept(ContentType.JSON);
         requestSpec.body(userRequest.get(0));
 
-        response = requestSpec.post("/users");
+        commonData.response = requestSpec.post("/users");
     }
 
     @Then("^the following user is returned$")
     public void the_following_user_is_returned(List<User> userResponse) throws Throwable {
-        UserResponseObject actualUserResponse = ObjectConverter.convertJsonObjectToJavaObject(response.body().asString(), UserResponseObject.class);
+        UserResponseObject actualUserResponse = ObjectConverter.convertJsonObjectToJavaObject(commonData.response.body().asString(), UserResponseObject.class);
 
         MatcherAssert.assertThat(actualUserResponse.getUser().getName(), Matchers.is(userResponse.get(0).getName()));
         MatcherAssert.assertThat(actualUserResponse.getUser().getEmail(), Matchers.is(userResponse.get(0).getEmail()));
