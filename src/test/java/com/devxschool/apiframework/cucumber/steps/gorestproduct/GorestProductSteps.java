@@ -1,4 +1,4 @@
-package com.devxschool.apiframework.cucumber.steps;
+package com.devxschool.apiframework.cucumber.steps.gorestproduct;
 
 import com.devxschool.apiframework.api.pojos.Product;
 import com.devxschool.apiframework.api.pojos.ProductResponseObject;
@@ -75,6 +75,5 @@ public class GorestProductSteps {
                     .pathParam("productId", productResponse.getProduct().getId())
                     .delete("/products/{productId}");
         }
-
     }
 }

@@ -7,10 +7,11 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
         features = {
-                "src/test/resources/features/blog.feature"
+                "src/test/resources/features/blog.feature",
         },
         glue = {
-                "com.devxschool.apiframework.cucumber.steps"
+                "com.devxschool.apiframework.cucumber.steps.blog",
+                "com.devxschool.apiframework.cucumber.steps.common"
         }
 )
 public class BlogTest {
