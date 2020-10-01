@@ -1,4 +1,4 @@
-package com.devxschool.apiframework.cucumber.testrunners;
+package com.devxschool.apiframework.cucumber.testrunners.api;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
@@ -10,8 +10,8 @@ import org.junit.runner.RunWith;
                 "src/test/resources/features/rebrandly.feature"
         },
         glue = {
-                "com.devxschool.apiframework.cucumber.steps.rebrandly",
-                "com.devxschool.apiframework.cucumber.steps.common"
+                "com.devxschool.apiframework.cucumber.steps.api.rebrandly",
+                "com.devxschool.apiframework.cucumber.steps.api.common"
         },
         tags = {
                 "@createLink"
