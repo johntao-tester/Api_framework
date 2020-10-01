@@ -1,3 +1,4 @@
+@Blog @Regression @Smoke
 Feature: Mock Blog
 
   Scenario: Leave a comment under a post

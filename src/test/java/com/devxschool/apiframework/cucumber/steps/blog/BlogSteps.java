@@ -1,16 +1,18 @@
-package com.devxschool.apiframework.cucumber.steps;
+package com.devxschool.apiframework.cucumber.steps.blog;
 
 import com.devxschool.apiframework.api.pojos.BlogPost;
 import com.devxschool.apiframework.api.pojos.BlogUser;
 import com.devxschool.apiframework.cucumber.steps.common.CommonData;
 import com.devxschool.apiframework.utilities.ObjectConverter;
+import com.devxschool.apiframework.utilities.PropertiesReader;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 
@@ -18,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 public class BlogSteps {
+    private static final Logger LOGGER = LogManager.getLogger(BlogSteps.class);
 
     private CommonData commonData;
     private BlogPost blogPost;
@@ -29,7 +32,7 @@ public class BlogSteps {
 
     @Before
     public void setUp() {
-        RestAssured.baseURI = "https://5f629b9c67e195001625f0a4.mockapi.io/api/v1";
+        RestAssured.baseURI = PropertiesReader.getProperty("blogUrl");
     }
 
     @When("^the following user has been created:$")
@@ -38,6 +41,8 @@ public class BlogSteps {
         requestSpec.contentType(ContentType.JSON);
         requestSpec.body(user.get(0));
 
+        LOGGER.info("POST " + PropertiesReader.getProperty("blogUrl") + "/users");
+        LOGGER.info(user.get(0).toString());
         commonData.response =  requestSpec.post("/users");
 
         userId = commonData.response.jsonPath().getString("id");
@@ -51,6 +56,8 @@ public class BlogSteps {
         requestSpec.contentType(ContentType.JSON);
         requestSpec.body(post.get(0));
 
+        LOGGER.info("POST " + PropertiesReader.getProperty("blogUrl") + "/users/" + userId + "/posts");
+        LOGGER.info(post.get(0).toString());
         commonData.response =  requestSpec
                 .pathParam("userId", blogUser.getId())
                 .post("/users/{userId}/posts");
@@ -63,6 +70,9 @@ public class BlogSteps {
         requestSpec.contentType(ContentType.JSON);
         requestSpec.body(comment.get(0));
 
+
+        LOGGER.info("POST " + PropertiesReader.getProperty("blogUrl") + "/users/" + blogPost.getUserId() + "/posts/" + blogPost.getId() + "/comments");
+        LOGGER.info("Comment is: " + comment.get(0).get("comment"));
         commonData.response = requestSpec
                 .pathParam("userId", blogPost.getUserId())
                 .pathParam("postId", blogPost.getId())
@@ -74,6 +84,7 @@ public class BlogSteps {
         RequestSpecification requestSpec = RestAssured.given();
         requestSpec.contentType(ContentType.JSON);
 
+        LOGGER.info("GET " + PropertiesReader.getProperty("blogUrl") + "/users/" + blogPost.getUserId() + "/posts/" + blogPost.getId());
         commonData.response = requestSpec
                 .pathParam("userId", blogPost.getUserId())
                 .pathParam("postId", blogPost.getId())
