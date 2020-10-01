@@ -1,4 +1,4 @@
-package com.devxschool.apiframework.cucumber.testrunners;
+package com.devxschool.apiframework.cucumber.testrunners.api;
 
 
 import cucumber.api.CucumberOptions;
@@ -12,8 +12,8 @@ import org.junit.runner.RunWith;
                 "src/test/resources/features/gorestproductsNegative.feature"
         },
         glue = {
-                "com.devxschool.apiframework.cucumber.steps.gorestproduct",
-                "com.devxschool.apiframework.cucumber.steps.common"
+                "com.devxschool.apiframework.cucumber.steps.api.gorestproduct",
+                "com.devxschool.apiframework.cucumber.steps.api.common"
         },
         tags = {
                 "@createProductWithDiscountAmountGreaterThanPrice"

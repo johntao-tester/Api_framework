@@ -1,8 +1,8 @@
-package com.devxschool.apiframework.cucumber.steps.blog;
+package com.devxschool.apiframework.cucumber.steps.api.blog;
 
 import com.devxschool.apiframework.api.pojos.BlogPost;
 import com.devxschool.apiframework.api.pojos.BlogUser;
-import com.devxschool.apiframework.cucumber.steps.common.CommonData;
+import com.devxschool.apiframework.cucumber.steps.api.common.CommonData;
 import com.devxschool.apiframework.utilities.ObjectConverter;
 import com.devxschool.apiframework.utilities.PropertiesReader;
 import cucumber.api.java.Before;
